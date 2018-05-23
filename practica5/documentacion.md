@@ -75,7 +75,7 @@ Con esto ya tendríamos la BD procediente de máquina 1 perfectamente restaurada
 
 ![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/restauracion.PNG)
 
-**Nota: aunque en la captura aparezca como *ejemplodb*, posteriormente lo volví a copiar como *contactos* para evitar confusiones.**
+**Nota:** aunque en la captura aparezca como *ejemplodb*, posteriormente lo volví a copiar como *contactos* para evitar confusiones.
 
 
 ### IV Realizar la configuración maestro-esclavo de los servidores MySQL para qu ela replicación de datos se realice automáticamente
