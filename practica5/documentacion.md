@@ -20,24 +20,24 @@ Insertamos la contraseña que tengamos puesta para MySQL y procedemos a la creac
 
 *Creación de la base de datos*
 ```
-create database contactos;   
+mysql> create database contactos;   
 ```
 *Selección de la base de datos creada*
 ```
-use contactos;
+mysql> use contactos;
 ```
 *Creación de campos en la tabla*
 ```
-create table datos(nombre varchar(100),tlf int);
+mysql> create table datos(nombre varchar(100),tlf int);
 ```
 *Inserción de datos para esos campos*
 ```
-insert into datos(nombre,tlf) values ("pepe", 95834987);
-insert into datos(nombre,tlf) values ("swap", 101010101);
+mysql> insert into datos(nombre,tlf) values ("pepe", 95834987);
+mysql> insert into datos(nombre,tlf) values ("swap", 101010101);
 ```
 *Comprobamos si se han introducido bien los datos mostrando la tabla*
 ```
-select * from datos;
+mysql> select * from datos;
 ```
 
 
@@ -47,8 +47,8 @@ select * from datos;
 ### II Realizar la copia de seguridad de la BD completa usando mysqldump en la máquina principal y copiar el archivo de copia de seguridad a la máquina secundaria y III Restaurar dicha copia de seguridad en la segunda máquina (clonado manual de la BD), de forma que en ambas máquina esté esa BD de forma idéntica
 Para realizar una copia de seguridad, es tan sencillo como usar el comando ```mysqldump```, pero antes de eso debemos asegurarnos de que la BD que vamos a copiar, no se va a modificar. Para ello, desde el menú de MySQL introducimos el siguiente comando:
 ```
-FLUSH TABLES WITH READ LOCK;
-quit
+mysql> FLUSH TABLES WITH READ LOCK;
+mysql> quit
 ```
 A continuación, procedemos a realizar la copia de la BD en el directorio que queramos. En mi caso, usaré `/tmp/`:
 ```
@@ -56,8 +56,8 @@ mysqldump contactos -u root -p > /tmp/contactos.sql
 ```
 Ya que hemos realizado la copia, podemos volver a desbloquear las tablas. Una vez más, desde MySQL:
 ```
-UNLOCK TABLES;
-quit
+mysql> UNLOCK TABLES;
+mysql> quit
 ```
 Ahora ya podemos usar *scp* desde la otra máquina para descargar la copia de la BD. Introducimos en el terminal como root:
 ```
@@ -65,8 +65,8 @@ scp máquina1:/tmp/contactos.sql /tmp/
 ```
 Con esto descargamos el archivo de la máquina 1 y lo ponemos en el directorio /tmp/ de la máquina 2. Ahora sólo tenemos que crear una BD en nuestra máquina 2 y asignarle a ésta nuestro archivo *.sql* procediente de la máquina 1, desde MySQL:
 ```
-CREATE DATABASE `contactos`;
-quit
+mysql> CREATE DATABASE `contactos`;
+mysql> quit
 
 mysql -u root -p contactos < /tmp/contactos.sql
 ```
