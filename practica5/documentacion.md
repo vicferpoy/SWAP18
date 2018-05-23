@@ -139,6 +139,9 @@ mysql> START SLAVE;
 
 Ahora procedemos a desbloquear las tablas en el maestro con ``` mysql> UNLOCK TABLES;``` y ya podemos realizar los cambios que queramos en el maestro, actualizándose en tiempo real el esclavo. Para comprobar que todo ha ido bien podemos usar en la máquina esclavo ```mysql> SHOW SLAVE STATUS\G```. Si falla algo, podemos ver qué es exactamente gracias a los logs. En mi caso fallaba la conexión porque el puerto 3306 no estaba abierto, así que lo solucioné con ```ufw allow 3306``` o ```ufw disable```, en ambas máquinas.
 
+![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/esclavo-status.PNG)
+
+
 Como se observa en la siguiente captura, todo funciona correctamente:
 
 
