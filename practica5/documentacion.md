@@ -44,3 +44,28 @@ select * from datos;
 ![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/tabla1.PNG)
 
 
+### II Realizar la copia de seguridad de la BD completa usando mysqldump en la máquina principal y copiar el archivo de copia de seguridad a la máquina secundaria
+Para realizar una copia de seguridad, es tan sencillo como usar el comando ```mysqldump```, pero antes de eso debemos asegurarnos de que la BD que vamos a copiar, no se va a modificar. Para ello, desde el menú de MySQL introducimos el siguiente comando:
+```
+FLUSH TABLES WITH READ LOCK;
+quit
+```
+A continuación, procedemos a realizar la copia de la BD en el directorio que queramos. En mi caso, usaré `/tmp/`:
+```
+mysqldump contactos -u root -p > /tmp/contactos.sql
+```
+Ya que hemos realizado la copia, podemos volver a desbloquear las tablas. Una vez más, desde MySQL:
+```
+UNLOCK TABLES;
+quit
+```
+Ahora ya podemos usar *scp* desde la otra máquina para descargar la copia de la BD. Introducimos en el terminal como root:
+```
+scp máquina1:/tmp/contactos.sql /tmp/
+```
+Con esto descargamos el archivo de la máquina 1 y lo ponemos en el directorio /tmp/ de la máquina 2. Para evitar dudas con las rutas o direcciones, adjunto imagen de cómo se hace en mi caso:
+
+
+![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/restauracion.PNG)
+
+
