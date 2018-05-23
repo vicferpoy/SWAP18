@@ -74,7 +74,34 @@ Con esto ya tendríamos la BD procediente de máquina 1 perfectamente restaurada
 
 
 ![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/restauracion.PNG)
+
 **Nota: aunque en la captura aparezca como *ejemplodb*, posteriormente lo volví a copiar como *contactos* para evitar confusiones.**
+
+
+### IV Realizar la configuración maestro-esclavo de los servidores MySQL para qu ela replicación de datos se realice automáticamente
+El primero paso para llevar a cabo esta configuración es elegir una máquina como maestro. Supongamos que será la máquina 1, de manera que debemos editar el archivo de configuración en `/etc/mysql/mysql.conf.d/mysqld.cnf`:
+
+*Comentamos el parámetro bind-address*
+```
+#bind-address 127.0.0.1
+```
+
+![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/maestro1.PNG)
+
+
+*Indicamos los siguientes parámetros de la siguiente manera. Guardamos el archivo y reiniciamos servicio*
+```
+log_error = /var/log/mysql/error.log
+server-id = 1
+log_bin = /var/log/mysql/bin.log
+
+/etc/init.d/mysql restart
+```
+
+![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/maestro2.PNG)
+
+
+
 
 
 
