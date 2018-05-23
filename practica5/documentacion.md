@@ -94,11 +94,58 @@ El primero paso para llevar a cabo esta configuración es elegir una máquina co
 log_error = /var/log/mysql/error.log
 server-id = 1
 log_bin = /var/log/mysql/bin.log
-
+```
+```
 /etc/init.d/mysql restart
 ```
 
 ![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/maestro2.PNG)
+
+
+Para el esclavo *(máquina 2)*, la configuración es exactamente la misma excepto por el parámetro *server_id*, que será 2. Reiniciamos servicio también en esta máquina al terminar.
+
+![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/esclavo1.PNG)
+
+
+El siguiente paso es crear un usuario en nuestra máquina maestro con el que pueda conectarse nuestro esclavo. Para ello usaremos los siguientes comandos en MySQL:
+```
+mysql> CREATE USER esclavo IDENTIFIED BY 'esclavo';
+mysql> GRANT REPLICATION SLAVE ON *.* TO 'esclavo'@'%'
+IDENTIFIED BY 'esclavo';
+mysql> FLUSH PRIVILEGES;
+mysql> FLUSH TABLES;
+mysql> FLUSH TABLES WITH READ LOCK;
+
+
+mysql> SHOW MASTER STATUS;
+```
+
+El último comando debería darnos este resultado si todo ha ido bien. Es muy importante guardar estos datos porque nos harán falta para la configuración del esclavo:
+
+![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/maestro3.PNG)
+
+
+De nuevo en la máquina esclava, procedemos a usar el siguiente comando con los parámetros referentes a nuestra máquina maestro y los datos obtenidos en la captura anterior para configurar el esclavo y ponerlo a funcionar:
+
+``` 
+mysql> CHANGE MASTER TO MASTER_HOST='192.168.88.132', 
+MASTER_USER='esclavo', MASTER_PASSWORD='esclavo',
+MASTER_LOG_FILE='mysql-bin.000012', MASTER_LOG_POS=154,
+MASTER_PORT=3306;
+
+
+mysql> START SLAVE;
+```
+
+Ahora procedemos a desbloquear las tablas en el maestro con ``` mysql> UNLOCK TABLES;``` y ya podemos realizar los cambios que queramos en el maestro, actualizándose en tiempo real el esclavo. Para comprobar que todo ha ido bien podemos usar en la máquina esclavo ```mysql> SHOW SLAVE STATUS\G```. Si falla algo, podemos ver qué es exactamente gracias a los logs. En mi caso fallaba la conexión porque el puerto 3306 no estaba abierto, así que lo solucioné con ```ufw allow 3306``` o ```ufw disable```, en ambas máquinas.
+
+Como se observa en la siguiente captura, todo funciona correctamente:
+
+
+![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/sincronizacion.PNG)
+
+
+
 
 
 
