@@ -44,7 +44,7 @@ select * from datos;
 ![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/tabla1.PNG)
 
 
-### II Realizar la copia de seguridad de la BD completa usando mysqldump en la máquina principal y copiar el archivo de copia de seguridad a la máquina secundaria
+### II Realizar la copia de seguridad de la BD completa usando mysqldump en la máquina principal y copiar el archivo de copia de seguridad a la máquina secundaria y III Restaurar dicha copia de seguridad en la segunda máquina (clonado manual de la BD), de forma que en ambas máquina esté esa BD de forma idéntica
 Para realizar una copia de seguridad, es tan sencillo como usar el comando ```mysqldump```, pero antes de eso debemos asegurarnos de que la BD que vamos a copiar, no se va a modificar. Para ello, desde el menú de MySQL introducimos el siguiente comando:
 ```
 FLUSH TABLES WITH READ LOCK;
@@ -63,9 +63,19 @@ Ahora ya podemos usar *scp* desde la otra máquina para descargar la copia de la
 ```
 scp máquina1:/tmp/contactos.sql /tmp/
 ```
-Con esto descargamos el archivo de la máquina 1 y lo ponemos en el directorio /tmp/ de la máquina 2. Para evitar dudas con las rutas o direcciones, adjunto imagen de cómo se hace en mi caso:
+Con esto descargamos el archivo de la máquina 1 y lo ponemos en el directorio /tmp/ de la máquina 2. Ahora sólo tenemos que crear una BD en nuestra máquina 2 y asignarle a ésta nuestro archivo *.sql* procediente de la máquina 1, desde MySQL:
+```
+CREATE DATABASE `contactos`;
+quit
+
+mysql -u root -p contactos < /tmp/contactos.sql
+```
+Con esto ya tendríamos la BD procediente de máquina 1 perfectamente restaurada en nuestra máquina 2. Adjunto captura de pantalla de cómo fue en mi caso para evitar errores a la hora de usar los parámetros:
 
 
 ![img](https://github.com/vicferpoy/SWAP18/blob/master/practica5/img/restauracion.PNG)
+**Nota: aunque en la captura aparezca como *ejemplodb*, posteriormente lo volví a copiar como *contactos* para evitar confusiones.**
+
+
 
 
